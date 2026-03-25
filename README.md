@@ -1,15 +1,8 @@
-[![npm version](https://img.shields.io/npm/v/oack-node)](https://www.npmjs.com/package/oack-node)
-[![CI](https://github.com/oackio/oack-node/actions/workflows/ci.yml/badge.svg)](https://github.com/oackio/oack-node/actions/workflows/ci.yml)
-[![Node.js](https://img.shields.io/node/v/oack-node)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-
 [![npm version](https://img.shields.io/npm/v/oack-node.svg)](https://www.npmjs.com/package/oack-node)
-[![CI](https://img.shields.io/github/actions/workflow/status/oackio/oack-node/ci.yml?branch=main&label=CI)](https://github.com/oackio/oack-node/actions/workflows/ci.yml)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue.svg)](https://www.typescriptlang.org/)
+[![CI](https://github.com/oack-io/oack-node/actions/workflows/ci.yml/badge.svg)](https://github.com/oack-io/oack-node/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/node/v/oack-node.svg)](https://nodejs.org/)
-[![License: MPL-2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-[![npm downloads](https://img.shields.io/npm/dm/oack-node.svg)](https://www.npmjs.com/package/oack-node)
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
 # oack-node
 
