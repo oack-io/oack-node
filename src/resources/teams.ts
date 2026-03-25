@@ -1,11 +1,21 @@
 import type { BaseClient } from "../client.js";
-import type { AcceptInviteResult, CreateTeamAPIKeyParams, CreateTeamAPIKeyResult, Team, TeamAPIKey, TeamInvite, TeamMember } from "../types/teams.js";
+import type {
+	AcceptInviteResult,
+	CreateTeamAPIKeyParams,
+	CreateTeamAPIKeyResult,
+	Team,
+	TeamAPIKey,
+	TeamInvite,
+	TeamMember,
+} from "../types/teams.js";
 
 export class Teams {
 	constructor(private client: BaseClient) {}
 
 	async create(accountId: string, name: string): Promise<Team> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/accounts/${accountId}/teams`, { json: { name } })) as Team;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/accounts/${accountId}/teams`, { json: { name } }),
+		) as Team;
 	}
 
 	async list(): Promise<Team[]> {
@@ -33,7 +43,9 @@ export class Teams {
 	}
 
 	async addMember(teamId: string, userId: string, role: string): Promise<TeamMember> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/members`, { json: { user_id: userId, role } })) as TeamMember;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/members`, { json: { user_id: userId, role } }),
+		) as TeamMember;
 	}
 
 	async removeMember(teamId: string, userId: string): Promise<void> {
@@ -61,7 +73,9 @@ export class Teams {
 	}
 
 	async createAPIKey(teamId: string, params: CreateTeamAPIKeyParams): Promise<CreateTeamAPIKeyResult> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/api-keys`, { json: params })) as CreateTeamAPIKeyResult;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/api-keys`, { json: params }),
+		) as CreateTeamAPIKeyResult;
 	}
 
 	async listAPIKeys(teamId: string): Promise<TeamAPIKey[]> {

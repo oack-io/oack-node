@@ -59,32 +59,100 @@ export class Oack {
 }
 
 // Re-export errors
-export { OackError, APIError, AuthenticationError, ForbiddenError, NotFoundError, ConflictError, RateLimitError } from "./errors.js";
+export {
+	OackError,
+	APIError,
+	AuthenticationError,
+	ForbiddenError,
+	NotFoundError,
+	ConflictError,
+	RateLimitError,
+} from "./errors.js";
 
 // Re-export types
 export type { OackOptions } from "./client.js";
 export type { Account, AccountMember, AccountInvite, Subscription } from "./types/accounts.js";
-export type { Team, TeamMember, TeamInvite, AcceptInviteResult, TeamAPIKey, CreateTeamAPIKeyParams, CreateTeamAPIKeyResult } from "./types/teams.js";
+export type {
+	Team,
+	TeamMember,
+	TeamInvite,
+	AcceptInviteResult,
+	TeamAPIKey,
+	CreateTeamAPIKeyParams,
+	CreateTeamAPIKeyResult,
+} from "./types/teams.js";
 export type { Monitor, CreateMonitorParams } from "./types/monitors.js";
 export type { Probe, ProbeList, ProbeListOptions, ProbeAggBucket, ProbeAggregation } from "./types/probes.js";
 export type { AlertChannel, CreateAlertChannelParams, AlertEvent } from "./types/alert-channels.js";
-export type { WindowMetrics, MonitorMetrics, ExpirationSSL, ExpirationDomain, Expiration, TimelineEvent, ChartEvent, CreateChartEventParams, UpdateChartEventParams } from "./types/metrics.js";
+export type {
+	WindowMetrics,
+	MonitorMetrics,
+	ExpirationSSL,
+	ExpirationDomain,
+	Expiration,
+	TimelineEvent,
+	ChartEvent,
+	CreateChartEventParams,
+	UpdateChartEventParams,
+} from "./types/metrics.js";
 export type { Checker, GeoCountry, GeoRegion } from "./types/geo.js";
 export type {
-	StatusPage, CreateStatusPageParams, UpdateStatusPageParams,
-	ComponentGroup, CreateComponentGroupParams, UpdateComponentGroupParams,
-	Component, CreateComponentParams, UpdateComponentParams,
-	Incident, CreateIncidentParams, UpdateIncidentParams, IncidentUpdate, PostIncidentUpdateParams, IncidentWithUpdates,
-	Maintenance, CreateMaintenanceParams, UpdateMaintenanceParams, MaintenanceUpdate, PostMaintenanceUpdateParams, MaintenanceWithUpdates,
+	StatusPage,
+	CreateStatusPageParams,
+	UpdateStatusPageParams,
+	ComponentGroup,
+	CreateComponentGroupParams,
+	UpdateComponentGroupParams,
+	Component,
+	CreateComponentParams,
+	UpdateComponentParams,
+	Incident,
+	CreateIncidentParams,
+	UpdateIncidentParams,
+	IncidentUpdate,
+	PostIncidentUpdateParams,
+	IncidentWithUpdates,
+	Maintenance,
+	CreateMaintenanceParams,
+	UpdateMaintenanceParams,
+	MaintenanceUpdate,
+	PostMaintenanceUpdateParams,
+	MaintenanceWithUpdates,
 	Subscriber,
-	IncidentTemplate, CreateIncidentTemplateParams, UpdateIncidentTemplateParams,
-	Watchdog, CreateWatchdogParams, UpdateWatchdogParams,
+	IncidentTemplate,
+	CreateIncidentTemplateParams,
+	UpdateIncidentTemplateParams,
+	Watchdog,
+	CreateWatchdogParams,
+	UpdateWatchdogParams,
 } from "./types/status-pages.js";
 export type { Comment, CreateCommentParams, CommentEdit } from "./types/comments.js";
-export type { ExternalLink, CreateExternalLinkParams, UpdateExternalLinkParams, CreateExternalLinkResult } from "./types/external-links.js";
-export type { PDIntegration, CreatePDIntegrationParams, UpdatePDIntegrationParams, CFIntegration, CreateCFIntegrationParams, UpdateCFIntegrationParams } from "./types/integrations.js";
+export type {
+	ExternalLink,
+	CreateExternalLinkParams,
+	UpdateExternalLinkParams,
+	CreateExternalLinkResult,
+} from "./types/external-links.js";
+export type {
+	PDIntegration,
+	CreatePDIntegrationParams,
+	UpdatePDIntegrationParams,
+	CFIntegration,
+	CreateCFIntegrationParams,
+	UpdateCFIntegrationParams,
+} from "./types/integrations.js";
 export type { NotificationDefaults, MonitorNotifications } from "./types/notifications.js";
 export type { Share, CreateShareParams } from "./types/shares.js";
 export type { Trace, TraceHop, TraceList } from "./types/traces.js";
-export type { User, Preferences, UpdatePreferencesParams, PushDevice, TelegramLink, TelegramLinkStatus, NotificationPreferences, QuietHours, UpdateNotificationPreferencesParams } from "./types/user.js";
+export type {
+	User,
+	Preferences,
+	UpdatePreferencesParams,
+	PushDevice,
+	TelegramLink,
+	TelegramLinkStatus,
+	NotificationPreferences,
+	QuietHours,
+	UpdateNotificationPreferencesParams,
+} from "./types/user.js";
 export type { CFLogEntry } from "./types/cf-logs.js";

@@ -29,7 +29,9 @@ export class Accounts {
 	}
 
 	async transfer(accountId: string, userId: string): Promise<Account> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/accounts/${accountId}/transfer`, { json: { user_id: userId } })) as Account;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/accounts/${accountId}/transfer`, { json: { user_id: userId } }),
+		) as Account;
 	}
 
 	async listMembers(accountId: string): Promise<AccountMember[]> {
@@ -37,7 +39,9 @@ export class Accounts {
 	}
 
 	async setMemberRole(accountId: string, userId: string, role: string): Promise<AccountMember> {
-		return JSON.parse(await this.client.request("PUT", `/api/v1/accounts/${accountId}/members/${userId}/role`, { json: { role } })) as AccountMember;
+		return JSON.parse(
+			await this.client.request("PUT", `/api/v1/accounts/${accountId}/members/${userId}/role`, { json: { role } }),
+		) as AccountMember;
 	}
 
 	async removeMember(accountId: string, userId: string): Promise<void> {
@@ -49,11 +53,15 @@ export class Accounts {
 	}
 
 	async updateSubscription(accountId: string, plan: string, status: string): Promise<Subscription> {
-		return JSON.parse(await this.client.request("PUT", `/api/v1/accounts/${accountId}/subscription`, { json: { plan, status } })) as Subscription;
+		return JSON.parse(
+			await this.client.request("PUT", `/api/v1/accounts/${accountId}/subscription`, { json: { plan, status } }),
+		) as Subscription;
 	}
 
 	async createInvite(accountId: string, email: string, role: string): Promise<AccountInvite> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/accounts/${accountId}/invites`, { json: { email, role } })) as AccountInvite;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/accounts/${accountId}/invites`, { json: { email, role } }),
+		) as AccountInvite;
 	}
 
 	async listInvites(accountId: string): Promise<AccountInvite[]> {

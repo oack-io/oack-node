@@ -1,13 +1,13 @@
 import type { BaseClient } from "../client.js";
 import type {
-	User,
+	NotificationPreferences,
 	Preferences,
-	UpdatePreferencesParams,
 	PushDevice,
 	TelegramLink,
 	TelegramLinkStatus,
-	NotificationPreferences,
 	UpdateNotificationPreferencesParams,
+	UpdatePreferencesParams,
+	User,
 } from "../types/user.js";
 
 export class UserResource {
@@ -26,7 +26,9 @@ export class UserResource {
 	}
 
 	async registerDevice(token: string, platform: string): Promise<PushDevice> {
-		return JSON.parse(await this.client.request("POST", "/api/v1/me/devices", { json: { token, platform } })) as PushDevice;
+		return JSON.parse(
+			await this.client.request("POST", "/api/v1/me/devices", { json: { token, platform } }),
+		) as PushDevice;
 	}
 
 	async listDevices(): Promise<PushDevice[]> {
@@ -45,14 +47,20 @@ export class UserResource {
 	}
 
 	async getTelegramLinkStatus(code: string): Promise<TelegramLinkStatus> {
-		return JSON.parse(await this.client.request("GET", `/api/v1/me/telegram-link/${code}/status`)) as TelegramLinkStatus;
+		return JSON.parse(
+			await this.client.request("GET", `/api/v1/me/telegram-link/${code}/status`),
+		) as TelegramLinkStatus;
 	}
 
 	async getNotificationPreferences(): Promise<NotificationPreferences> {
-		return JSON.parse(await this.client.request("GET", "/api/v1/me/notification-preferences")) as NotificationPreferences;
+		return JSON.parse(
+			await this.client.request("GET", "/api/v1/me/notification-preferences"),
+		) as NotificationPreferences;
 	}
 
 	async updateNotificationPreferences(params: UpdateNotificationPreferencesParams): Promise<NotificationPreferences> {
-		return JSON.parse(await this.client.request("PUT", "/api/v1/me/notification-preferences", { json: params })) as NotificationPreferences;
+		return JSON.parse(
+			await this.client.request("PUT", "/api/v1/me/notification-preferences", { json: params }),
+		) as NotificationPreferences;
 	}
 }

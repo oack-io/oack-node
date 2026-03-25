@@ -5,7 +5,9 @@ export class Monitors {
 	constructor(private client: BaseClient) {}
 
 	async create(teamId: string, params: CreateMonitorParams): Promise<Monitor> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/monitors`, { json: params })) as Monitor;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors`, { json: params }),
+		) as Monitor;
 	}
 
 	async list(teamId: string): Promise<Monitor[]> {
@@ -17,7 +19,9 @@ export class Monitors {
 	}
 
 	async update(teamId: string, monitorId: string, params: CreateMonitorParams): Promise<Monitor> {
-		return JSON.parse(await this.client.request("PUT", `/api/v1/teams/${teamId}/monitors/${monitorId}`, { json: params })) as Monitor;
+		return JSON.parse(
+			await this.client.request("PUT", `/api/v1/teams/${teamId}/monitors/${monitorId}`, { json: params }),
+		) as Monitor;
 	}
 
 	async delete(teamId: string, monitorId: string): Promise<void> {
@@ -25,19 +29,29 @@ export class Monitors {
 	}
 
 	async pause(teamId: string, monitorId: string): Promise<Monitor> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/pause`)) as Monitor;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/pause`),
+		) as Monitor;
 	}
 
 	async unpause(teamId: string, monitorId: string): Promise<Monitor> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/unpause`)) as Monitor;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/unpause`),
+		) as Monitor;
 	}
 
 	async duplicate(teamId: string, monitorId: string): Promise<Monitor> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/duplicate`)) as Monitor;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/duplicate`),
+		) as Monitor;
 	}
 
 	async move(teamId: string, monitorId: string, targetTeamId: string): Promise<Monitor> {
-		return JSON.parse(await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/move`, { json: { target_team_id: targetTeamId } })) as Monitor;
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/move`, {
+				json: { target_team_id: targetTeamId },
+			}),
+		) as Monitor;
 	}
 
 	async testAlert(teamId: string, monitorId: string): Promise<void> {

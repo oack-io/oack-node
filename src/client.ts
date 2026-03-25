@@ -30,7 +30,11 @@ export class BaseClient {
 		return typeof this.apiKey === "function" ? this.apiKey() : this.apiKey;
 	}
 
-	async request(method: string, path: string, options?: { json?: unknown; params?: Record<string, string> | undefined }): Promise<string> {
+	async request(
+		method: string,
+		path: string,
+		options?: { json?: unknown; params?: Record<string, string> | undefined },
+	): Promise<string> {
 		let url = this.baseUrl + path;
 		if (options?.params) {
 			const qs = new URLSearchParams(options.params).toString();
