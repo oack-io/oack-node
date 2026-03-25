@@ -290,6 +290,276 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 	});
 
 	// -------------------------------------------------------------------
+	// Monitor ↔ Alert Channel Linking
+	// -------------------------------------------------------------------
+	describe("Monitor-Alert Channel Link", () => {
+		let teamId: string;
+		let monitorId: string;
+		let channelId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-link-team-${unique}`);
+			teamId = team.id;
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-link-mon-${unique}`,
+				url: "https://example.com",
+			});
+			monitorId = monitor.id;
+			const ch = await client.alertChannels.create(teamId, {
+				type: "webhook",
+				name: `ts-acc-link-ch-${unique}`,
+				config: { url: "https://httpbin.org/post" },
+			});
+			channelId = ch.id;
+		});
+
+		afterAll(async () => {
+			if (monitorId) await client.monitors.delete(teamId, monitorId);
+			if (channelId) await client.alertChannels.delete(teamId, channelId);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("link channel to monitor", async () => {
+			await client.alertChannels.linkMonitorChannel(teamId, monitorId, channelId);
+			const linked = await client.alertChannels.listMonitorChannels(teamId, monitorId);
+			expect(linked).toContain(channelId);
+		});
+
+		it("unlink channel from monitor", async () => {
+			await client.alertChannels.unlinkMonitorChannel(teamId, monitorId, channelId);
+			const linked = await client.alertChannels.listMonitorChannels(teamId, monitorId);
+			expect(linked).not.toContain(channelId);
+		});
+
+		it("set monitor channels", async () => {
+			const result = await client.alertChannels.setMonitorChannels(teamId, monitorId, [channelId]);
+			expect(result).toContain(channelId);
+
+			const cleared = await client.alertChannels.setMonitorChannels(teamId, monitorId, []);
+			expect(cleared).toHaveLength(0);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Status Pages (full hierarchy)
+	// -------------------------------------------------------------------
+	describe("Status Pages", () => {
+		let teamId: string;
+		let monitorId: string;
+		let pageId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-sp-team-${unique}`);
+			teamId = team.id;
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-sp-mon-${unique}`,
+				url: "https://example.com",
+			});
+			monitorId = monitor.id;
+		});
+
+		afterAll(async () => {
+			if (pageId) await client.statusPages.delete(ACCOUNT_ID, pageId);
+			if (monitorId) await client.monitors.delete(teamId, monitorId);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("create status page", async () => {
+			const page = await client.statusPages.create(ACCOUNT_ID, {
+				name: `ts-acc-page-${unique}`,
+				slug: `ts-acc-${unique}`,
+			});
+			expect(page.id).toBeTruthy();
+			expect(page.slug).toBe(`ts-acc-${unique}`);
+			pageId = page.id;
+		});
+
+		it("get status page", async () => {
+			const page = await client.statusPages.get(ACCOUNT_ID, pageId);
+			expect(page.id).toBe(pageId);
+		});
+
+		it("list status pages", async () => {
+			const pages = await client.statusPages.list(ACCOUNT_ID);
+			expect(pages.some((p) => p.id === pageId)).toBe(true);
+		});
+
+		it("update status page", async () => {
+			const updated = await client.statusPages.update(ACCOUNT_ID, pageId, {
+				name: `ts-acc-page-${unique}-updated`,
+				slug: `ts-acc-${unique}`,
+			});
+			expect(updated.name).toBe(`ts-acc-page-${unique}-updated`);
+		});
+
+		it("component group CRUD", async () => {
+			const group = await client.statusPages.createComponentGroup(ACCOUNT_ID, pageId, {
+				name: `ts-acc-group-${unique}`,
+				position: 0,
+			});
+			expect(group.id).toBeTruthy();
+
+			const groups = await client.statusPages.listComponentGroups(ACCOUNT_ID, pageId);
+			expect(groups.some((g) => g.id === group.id)).toBe(true);
+
+			await client.statusPages.deleteComponentGroup(ACCOUNT_ID, pageId, group.id);
+		});
+
+		it("component CRUD", async () => {
+			const comp = await client.statusPages.createComponent(ACCOUNT_ID, pageId, {
+				name: `ts-acc-comp-${unique}`,
+				position: 0,
+			});
+			expect(comp.id).toBeTruthy();
+
+			const comps = await client.statusPages.listComponents(ACCOUNT_ID, pageId);
+			expect(comps.some((c) => c.id === comp.id)).toBe(true);
+
+			await client.statusPages.deleteComponent(ACCOUNT_ID, pageId, comp.id);
+		});
+
+		it("watchdog CRUD", async () => {
+			const comp = await client.statusPages.createComponent(ACCOUNT_ID, pageId, {
+				name: `ts-acc-wd-comp-${unique}`,
+				position: 0,
+			});
+
+			const wd = await client.watchdogs.create(ACCOUNT_ID, pageId, comp.id, {
+				monitor_id: monitorId,
+				severity: "major",
+			});
+			expect(wd.id).toBeTruthy();
+
+			const wds = await client.watchdogs.list(ACCOUNT_ID, pageId, comp.id);
+			expect(wds.some((w) => w.id === wd.id)).toBe(true);
+
+			await client.watchdogs.delete(ACCOUNT_ID, pageId, comp.id, wd.id);
+			await client.statusPages.deleteComponent(ACCOUNT_ID, pageId, comp.id);
+		});
+
+		it("incident CRUD", async () => {
+			const inc = await client.statusPages.createIncident(ACCOUNT_ID, pageId, {
+				title: `ts-acc-incident-${unique}`,
+				message: "Test incident",
+				severity: "minor",
+			});
+			expect(inc.id).toBeTruthy();
+
+			const incidents = await client.statusPages.listIncidents(ACCOUNT_ID, pageId);
+			expect(incidents.some((i) => i.id === inc.id)).toBe(true);
+
+			const fetched = await client.statusPages.getIncident(ACCOUNT_ID, pageId, inc.id);
+			expect(fetched.title).toBe(`ts-acc-incident-${unique}`);
+
+			await client.statusPages.deleteIncident(ACCOUNT_ID, pageId, inc.id);
+		});
+
+		it("maintenance CRUD", async () => {
+			const maint = await client.statusPages.createMaintenance(ACCOUNT_ID, pageId, {
+				title: `ts-acc-maint-${unique}`,
+				message: "Test maintenance",
+				scheduled_at: "2099-01-01T00:00:00Z",
+			});
+			expect(maint.id).toBeTruthy();
+
+			const maints = await client.statusPages.listMaintenances(ACCOUNT_ID, pageId);
+			expect(maints.some((m) => m.id === maint.id)).toBe(true);
+
+			await client.statusPages.deleteMaintenance(ACCOUNT_ID, pageId, maint.id);
+		});
+
+		it("incident template CRUD", async () => {
+			const tmpl = await client.statusPages.createIncidentTemplate(ACCOUNT_ID, pageId, {
+				name: `ts-acc-tmpl-${unique}`,
+				message: "Template body",
+				severity: "minor",
+			});
+			expect(tmpl.id).toBeTruthy();
+
+			const tmpls = await client.statusPages.listIncidentTemplates(ACCOUNT_ID, pageId);
+			expect(tmpls.some((t) => t.id === tmpl.id)).toBe(true);
+
+			await client.statusPages.deleteIncidentTemplate(ACCOUNT_ID, pageId, tmpl.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Team API Keys
+	// -------------------------------------------------------------------
+	describe("Team API Keys", () => {
+		let teamId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-apikey-team-${unique}`);
+			teamId = team.id;
+		});
+
+		afterAll(async () => {
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("create, list, delete", async () => {
+			const result = await client.teams.createAPIKey(teamId, {
+				name: `ts-acc-key-${unique}`,
+			});
+			expect(result.key).toBeTruthy();
+			expect(result.api_key.id).toBeTruthy();
+
+			const keys = await client.teams.listAPIKeys(teamId);
+			expect(keys.some((k) => k.id === result.api_key.id)).toBe(true);
+
+			await client.teams.deleteAPIKey(teamId, result.api_key.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Monitor (full fields)
+	// -------------------------------------------------------------------
+	describe("Monitor Full Fields", () => {
+		let teamId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-monfull-team-${unique}`);
+			teamId = team.id;
+		});
+
+		afterAll(async () => {
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("create with all optional fields", async () => {
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-full-${unique}`,
+				url: "https://example.com/health",
+				check_interval_ms: 60000,
+				timeout_ms: 10000,
+				http_method: "GET",
+				http_version: "1.1",
+				headers: { "X-Test": "true" },
+				follow_redirects: true,
+				allowed_status_codes: ["2xx"],
+				failure_threshold: 5,
+				latency_threshold_ms: 5000,
+				ssl_expiry_enabled: true,
+				ssl_expiry_thresholds: [30, 14, 7],
+				domain_expiry_enabled: false,
+				uptime_threshold_good: 99.9,
+				uptime_threshold_degraded: 99.0,
+				uptime_threshold_critical: 95.0,
+			});
+			expect(monitor.id).toBeTruthy();
+			expect(monitor.check_interval_ms).toBe(60000);
+			expect(monitor.timeout_ms).toBe(10000);
+			expect(monitor.http_method).toBe("GET");
+			expect(monitor.follow_redirects).toBe(true);
+			expect(monitor.failure_threshold).toBe(5);
+			expect(monitor.latency_threshold_ms).toBe(5000);
+
+			await client.monitors.delete(teamId, monitor.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
 	// User
 	// -------------------------------------------------------------------
 	describe("User", () => {
