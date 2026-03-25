@@ -9,7 +9,8 @@ export class Geo {
 	}
 
 	async listRegions(): Promise<GeoRegion[]> {
-		const resp = JSON.parse(await this.client.request("GET", "/api/v1/regions")) as { regions: GeoRegion[] };
-		return resp.regions;
+		const resp = JSON.parse(await this.client.request("GET", "/api/v1/geo/regions")) as Record<string, unknown>;
+		const regions = (resp.regions ?? resp.countries ?? []) as GeoRegion[];
+		return regions;
 	}
 }
