@@ -1,0 +1,63 @@
+export interface Monitor {
+	id: string;
+	team_id: string;
+	name: string;
+	url: string;
+	status: string;
+	timeout_ms: number;
+	check_interval_ms: number;
+	http_method: string;
+	http_version: string;
+	headers: Record<string, string>;
+	follow_redirects: boolean;
+	allowed_status_codes: string[];
+	failure_threshold: number;
+	latency_threshold_ms: number;
+	ssl_expiry_enabled: boolean;
+	ssl_expiry_thresholds: number[];
+	domain_expiry_enabled: boolean;
+	domain_expiry_thresholds: number[];
+	uptime_threshold_good: number;
+	uptime_threshold_degraded: number;
+	uptime_threshold_critical: number;
+	checker_region: string;
+	checker_country: string;
+	resolve_override_ip: string;
+	health_status: string;
+	health_down_reason: string;
+	consecutive_failures: number;
+	consecutive_successes: number;
+	health_changed_at: string | null;
+	is_debug_enabled: boolean;
+	debug_expires_at: string | null;
+	checker_id: string;
+	cf_zone_integration_id: string;
+	created_by: string;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface CreateMonitorParams {
+	name: string;
+	url: string;
+	check_interval_ms?: number;
+	timeout_ms?: number;
+	http_method?: string;
+	http_version?: string;
+	headers?: Record<string, string>;
+	follow_redirects?: boolean;
+	allowed_status_codes?: string[];
+	failure_threshold?: number;
+	latency_threshold_ms?: number;
+	ssl_expiry_enabled?: boolean;
+	ssl_expiry_thresholds?: number[];
+	domain_expiry_enabled?: boolean;
+	domain_expiry_thresholds?: number[];
+	uptime_threshold_good?: number;
+	uptime_threshold_degraded?: number;
+	uptime_threshold_critical?: number;
+	checker_region?: string;
+	checker_country?: string;
+	resolve_override_ip?: string;
+	status?: string;
+}
