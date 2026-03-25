@@ -58,6 +58,10 @@ export class Oack {
 	}
 }
 
+// Re-export auth
+export { deviceFlowAuthenticate } from "./auth.js";
+export type { DeviceFlowOptions } from "./auth.js";
+
 // Re-export errors
 export {
 	OackError,

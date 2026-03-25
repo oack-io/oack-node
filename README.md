@@ -50,6 +50,20 @@ const client = new Oack({
 });
 ```
 
+## Browser Login (Device Flow)
+
+Authenticate via browser instead of a static API key. The JWT lives only in memory and disappears when the program exits.
+
+```typescript
+import { deviceFlowAuthenticate, Oack } from "oack-node";
+
+// Opens your browser, waits for approval, returns JWT
+const token = await deviceFlowAuthenticate();
+
+const client = new Oack({ apiKey: token });
+const teams = await client.teams.list();
+```
+
 ## Error Handling
 
 ```typescript
