@@ -30,7 +30,7 @@ export class BaseClient {
 		return typeof this.apiKey === "function" ? this.apiKey() : this.apiKey;
 	}
 
-	async request(method: string, path: string, options?: { json?: unknown; params?: Record<string, string> }): Promise<string> {
+	async request(method: string, path: string, options?: { json?: unknown; params?: Record<string, string> | undefined }): Promise<string> {
 		let url = this.baseUrl + path;
 		if (options?.params) {
 			const qs = new URLSearchParams(options.params).toString();
@@ -41,7 +41,7 @@ export class BaseClient {
 		const token = this.getToken();
 		if (token) headers.Authorization = `Bearer ${token}`;
 
-		let body: string | undefined;
+		let body: string | null = null;
 		if (options?.json !== undefined) {
 			headers["Content-Type"] = "application/json";
 			body = JSON.stringify(options.json);
