@@ -35,6 +35,62 @@ export interface Monitor {
 	created_by: string;
 	created_at: string;
 	updated_at: string;
+	aggregate_failure_mode?: string;
+	aggregate_failure_count?: number;
+	locations?: MonitorLocation[];
+	type: string;
+	browser_config?: BrowserConfig;
+}
+
+export interface BrowserConfig {
+	screenshot_enabled: boolean;
+	screenshot_full_page: boolean;
+	console_error_threshold: number;
+	resource_error_threshold: number;
+	user_agent: string;
+	viewport_width: number;
+	viewport_height: number;
+	wait_until: string;
+	extra_wait_ms: number;
+	mode?: string;
+	steps?: BrowserStep[];
+	script?: string;
+	script_env?: ScriptEnvVar[];
+}
+
+export interface BrowserStep {
+	action: string;
+	selector?: string;
+	value?: string;
+	url?: string;
+	attribute?: string;
+	variable_name?: string;
+	name?: string;
+	timeout_ms?: number;
+	wait_ms?: number;
+}
+
+export interface ScriptEnvVar {
+	key: string;
+	value: string;
+	secret: boolean;
+}
+
+export interface MonitorLocation {
+	id: string;
+	label: string;
+	checker_region?: string;
+	checker_id?: string;
+	assigned_checker_id?: string;
+	health_status: string;
+	health_down_reason: string;
+	health_changed_at?: string;
+}
+
+export interface LocationParams {
+	checker_id?: string;
+	checker_region?: string;
+	label?: string;
 }
 
 export interface CreateMonitorParams {
@@ -60,4 +116,9 @@ export interface CreateMonitorParams {
 	checker_country?: string;
 	resolve_override_ip?: string;
 	status?: string;
+	locations?: LocationParams[];
+	aggregate_failure_mode?: string;
+	aggregate_failure_count?: number;
+	type?: string;
+	browser_config?: BrowserConfig;
 }

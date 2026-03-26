@@ -10,9 +10,15 @@ export class Comments {
 		) as Comment;
 	}
 
-	async list(teamId: string, monitorId: string): Promise<Comment[]> {
+	async list(
+		teamId: string,
+		monitorId: string,
+		options: { from: string; to: string; include_resolved?: boolean },
+	): Promise<Comment[]> {
+		const params: Record<string, string> = { from: options.from, to: options.to };
+		if (options.include_resolved) params.include_resolved = "true";
 		return JSON.parse(
-			await this.client.request("GET", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments`),
+			await this.client.request("GET", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments`, { params }),
 		) as Comment[];
 	}
 
@@ -42,16 +48,12 @@ export class Comments {
 		) as Comment[];
 	}
 
-	async resolve(teamId: string, monitorId: string, commentId: string): Promise<Comment> {
-		return JSON.parse(
-			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments/${commentId}/resolve`),
-		) as Comment;
+	async resolve(teamId: string, monitorId: string, commentId: string): Promise<void> {
+		await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments/${commentId}/resolve`);
 	}
 
-	async reopen(teamId: string, monitorId: string, commentId: string): Promise<Comment> {
-		return JSON.parse(
-			await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments/${commentId}/reopen`),
-		) as Comment;
+	async reopen(teamId: string, monitorId: string, commentId: string): Promise<void> {
+		await this.client.request("POST", `/api/v1/teams/${teamId}/monitors/${monitorId}/comments/${commentId}/reopen`);
 	}
 
 	async listEdits(teamId: string, monitorId: string, commentId: string): Promise<CommentEdit[]> {

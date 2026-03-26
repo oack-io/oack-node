@@ -568,4 +568,223 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 			expect(user.id).toBeTruthy();
 		});
 	});
+
+	// -------------------------------------------------------------------
+	// Account API Keys
+	// -------------------------------------------------------------------
+	describe("Account API Keys", () => {
+		let keyId: string;
+
+		afterAll(async () => {
+			if (keyId) await client.accounts.deleteAPIKey(ACCOUNT_ID, keyId);
+		});
+
+		it("create", async () => {
+			const result = await client.accounts.createAPIKey(ACCOUNT_ID, { name: `ts-acc-key-${unique}` });
+			expect(result.key).toBeTruthy();
+			expect(result.api_key.name).toBe(`ts-acc-key-${unique}`);
+			keyId = result.api_key.id;
+		});
+
+		it("list", async () => {
+			const keys = await client.accounts.listAPIKeys(ACCOUNT_ID);
+			expect(keys.some((k) => k.id === keyId)).toBe(true);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Comments
+	// -------------------------------------------------------------------
+	describe("Comments", () => {
+		let teamId: string;
+		let monitorId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-comments-team-${unique}`);
+			teamId = team.id;
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-comments-mon-${unique}`,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
+			});
+			monitorId = monitor.id;
+		});
+
+		afterAll(async () => {
+			if (monitorId) await client.monitors.delete(teamId, monitorId);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("create, list, edit, resolve, reopen, reply, delete", async () => {
+			// Create
+			const comment = await client.comments.create(teamId, monitorId, {
+				body: "test comment",
+				anchor_at: new Date().toISOString(),
+			});
+			expect(comment.id).toBeTruthy();
+			expect(comment.body).toBe("test comment");
+
+			// List
+			const from = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+			const to = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+			const comments = await client.comments.list(teamId, monitorId, { from, to, include_resolved: true });
+			expect(comments.some((c) => c.id === comment.id)).toBe(true);
+
+			// Edit
+			const edited = await client.comments.edit(teamId, monitorId, comment.id, "edited body");
+			expect(edited.body).toBe("edited body");
+
+			// Resolve
+			await client.comments.resolve(teamId, monitorId, comment.id);
+
+			// Reopen
+			await client.comments.reopen(teamId, monitorId, comment.id);
+
+			// Reply
+			const reply = await client.comments.reply(teamId, monitorId, comment.id, "reply text");
+			expect(reply.id).toBeTruthy();
+
+			// List replies
+			const replies = await client.comments.listReplies(teamId, monitorId, comment.id);
+			expect(replies.some((r) => r.id === reply.id)).toBe(true);
+
+			// Delete
+			await client.comments.delete(teamId, monitorId, reply.id);
+			await client.comments.delete(teamId, monitorId, comment.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Shares
+	// -------------------------------------------------------------------
+	describe("Shares", () => {
+		let teamId: string;
+		let monitorId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-shares-team-${unique}`);
+			teamId = team.id;
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-shares-mon-${unique}`,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
+			});
+			monitorId = monitor.id;
+		});
+
+		afterAll(async () => {
+			if (monitorId) await client.monitors.delete(teamId, monitorId);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("create, list, revoke", async () => {
+			const now = new Date();
+			const from = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+			const to = now.toISOString();
+			const share = await client.shares.create(teamId, monitorId, {
+				from,
+				to,
+				access_mode: "public",
+				expires_in: "7d",
+			});
+			expect(share.id).toBeTruthy();
+			expect(share.token).toBeTruthy();
+
+			const shares = await client.shares.list(teamId, monitorId);
+			expect(shares.some((s) => s.id === share.id)).toBe(true);
+
+			await client.shares.revoke(teamId, monitorId, share.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Traces
+	// -------------------------------------------------------------------
+	describe("Traces", () => {
+		let teamId: string;
+		let monitorId: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-traces-team-${unique}`);
+			teamId = team.id;
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-traces-mon-${unique}`,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
+			});
+			monitorId = monitor.id;
+		});
+
+		afterAll(async () => {
+			if (monitorId) await client.monitors.delete(teamId, monitorId);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("list", async () => {
+			try {
+				const traces = await client.traces.list(teamId, monitorId);
+				expect(Array.isArray(traces)).toBe(true);
+			} catch (e: any) {
+				// Traces endpoint may not be enabled in all environments
+				if (e?.statusCode === 404) {
+					return;
+				}
+				throw e;
+			}
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// User Preferences
+	// -------------------------------------------------------------------
+	describe("User Preferences", () => {
+		it("get preferences", async () => {
+			const prefs = await client.user.getPreferences();
+			expect(prefs).toBeTruthy();
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Monitor move, testAlert
+	// -------------------------------------------------------------------
+	describe("Monitor Actions", () => {
+		let teamId: string;
+		let team2Id: string;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, `ts-acc-actions-team-${unique}`);
+			teamId = team.id;
+			const team2 = await client.teams.create(ACCOUNT_ID, `ts-acc-actions-team2-${unique}`);
+			team2Id = team2.id;
+		});
+
+		afterAll(async () => {
+			if (team2Id) await client.teams.delete(team2Id);
+			if (teamId) await client.teams.delete(teamId);
+		});
+
+		it("move monitor between teams", async () => {
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-move-${unique}`,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
+			});
+
+			const moved = await client.monitors.move(teamId, monitor.id, team2Id);
+			expect(moved.team_id).toBe(team2Id);
+
+			await client.monitors.delete(team2Id, monitor.id);
+		});
+
+		it("test alert", async () => {
+			const monitor = await client.monitors.create(teamId, {
+				name: `ts-acc-testalert-${unique}`,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
+			});
+
+			await client.monitors.testAlert(teamId, monitor.id);
+			await client.monitors.delete(teamId, monitor.id);
+		});
+	});
 });

@@ -46,31 +46,61 @@ export interface TimelineEvent {
 export interface ChartEvent {
 	id: string;
 	team_id: string;
-	monitor_id: string | null;
-	kind: string;
+	monitor_id: string;
 	source: string;
+	kind: string;
 	title: string;
-	body: string;
-	start_at: string;
-	end_at: string | null;
+	description: string;
+	url: string;
+	severity: string;
+	external_id: string;
+	started_at: string;
+	ended_at: string | null;
+	metadata: Record<string, unknown>;
+	created_by: string;
 	created_at: string;
+	updated_at: string;
 }
 
 export interface CreateChartEventParams {
 	monitor_id?: string;
 	kind: string;
-	source: string;
 	title: string;
-	body?: string;
-	start_at: string;
-	end_at?: string;
+	description?: string;
+	url?: string;
+	severity?: string;
+	started_at: string;
+	ended_at?: string;
+	metadata?: Record<string, unknown>;
 }
 
 export interface UpdateChartEventParams {
+	monitor_id?: string;
+	kind?: string;
+	title?: string;
+	description?: string;
+	url?: string;
+	severity?: string;
+	started_at?: string;
+	ended_at?: string;
+	metadata?: Record<string, unknown>;
+}
+
+export interface ChartEventListOptions {
+	from: string;
+	to: string;
+	monitor_id?: string;
 	kind?: string;
 	source?: string;
-	title?: string;
-	body?: string;
-	start_at?: string;
-	end_at?: string;
+}
+
+export interface IngestChartEventParams {
+	kind: string;
+	title: string;
+	url?: string;
+	started_at?: string;
+	ended_at?: string;
+	monitor_id?: string;
+	severity?: string;
+	metadata?: Record<string, unknown>;
 }

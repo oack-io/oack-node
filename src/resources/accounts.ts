@@ -1,5 +1,13 @@
 import type { BaseClient } from "../client.js";
-import type { Account, AccountInvite, AccountMember, Subscription } from "../types/accounts.js";
+import type {
+	Account,
+	AccountAPIKey,
+	AccountInvite,
+	AccountMember,
+	CreateAccountAPIKeyParams,
+	CreateAccountAPIKeyResult,
+	Subscription,
+} from "../types/accounts.js";
 
 export class Accounts {
 	constructor(private client: BaseClient) {}
@@ -70,5 +78,21 @@ export class Accounts {
 
 	async revokeInvite(accountId: string, inviteId: string): Promise<void> {
 		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/invites/${inviteId}`);
+	}
+
+	async createAPIKey(accountId: string, params: CreateAccountAPIKeyParams): Promise<CreateAccountAPIKeyResult> {
+		return JSON.parse(
+			await this.client.request("POST", `/api/v1/accounts/${accountId}/api-keys`, { json: params }),
+		) as CreateAccountAPIKeyResult;
+	}
+
+	async listAPIKeys(accountId: string): Promise<AccountAPIKey[]> {
+		return JSON.parse(
+			await this.client.request("GET", `/api/v1/accounts/${accountId}/api-keys`),
+		) as AccountAPIKey[];
+	}
+
+	async deleteAPIKey(accountId: string, keyId: string): Promise<void> {
+		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/api-keys/${keyId}`);
 	}
 }

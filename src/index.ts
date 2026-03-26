@@ -1,6 +1,7 @@
 import { BaseClient, type OackOptions } from "./client.js";
 import { Accounts } from "./resources/accounts.js";
 import { AlertChannels } from "./resources/alert-channels.js";
+import { BrowserProbes } from "./resources/browser-probes.js";
 import { CFLogs } from "./resources/cf-logs.js";
 import { Comments } from "./resources/comments.js";
 import { ExternalLinks } from "./resources/external-links.js";
@@ -22,6 +23,7 @@ export class Oack {
 	readonly teams: Teams;
 	readonly monitors: Monitors;
 	readonly probes: Probes;
+	readonly browserProbes: BrowserProbes;
 	readonly alertChannels: AlertChannels;
 	readonly metrics: Metrics;
 	readonly geo: Geo;
@@ -42,6 +44,7 @@ export class Oack {
 		this.teams = new Teams(client);
 		this.monitors = new Monitors(client);
 		this.probes = new Probes(client);
+		this.browserProbes = new BrowserProbes(client);
 		this.alertChannels = new AlertChannels(client);
 		this.metrics = new Metrics(client);
 		this.geo = new Geo(client);
@@ -75,7 +78,15 @@ export {
 
 // Re-export types
 export type { OackOptions } from "./client.js";
-export type { Account, AccountMember, AccountInvite, Subscription } from "./types/accounts.js";
+export type {
+	Account,
+	AccountMember,
+	AccountInvite,
+	Subscription,
+	AccountAPIKey,
+	CreateAccountAPIKeyParams,
+	CreateAccountAPIKeyResult,
+} from "./types/accounts.js";
 export type {
 	Team,
 	TeamMember,
@@ -85,8 +96,25 @@ export type {
 	CreateTeamAPIKeyParams,
 	CreateTeamAPIKeyResult,
 } from "./types/teams.js";
-export type { Monitor, CreateMonitorParams } from "./types/monitors.js";
+export type {
+	Monitor,
+	CreateMonitorParams,
+	BrowserConfig,
+	BrowserStep,
+	ScriptEnvVar,
+	MonitorLocation,
+	LocationParams,
+} from "./types/monitors.js";
 export type { Probe, ProbeList, ProbeListOptions, ProbeAggBucket, ProbeAggregation } from "./types/probes.js";
+export type {
+	BrowserProbe,
+	BrowserProbeList,
+	BrowserProbeListOptions,
+	BrowserProbeAggBucket,
+	BrowserProbeAggregation,
+	ConsoleMessage,
+	StepResult,
+} from "./types/browser-probes.js";
 export type { AlertChannel, CreateAlertChannelParams, AlertEvent } from "./types/alert-channels.js";
 export type {
 	WindowMetrics,
@@ -98,6 +126,8 @@ export type {
 	ChartEvent,
 	CreateChartEventParams,
 	UpdateChartEventParams,
+	ChartEventListOptions,
+	IngestChartEventParams,
 } from "./types/metrics.js";
 export type { Checker, GeoCountry, GeoRegion } from "./types/geo.js";
 export type {

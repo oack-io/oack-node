@@ -39,3 +39,23 @@ export interface Subscription {
 	created_at: string;
 	updated_at: string;
 }
+
+export interface AccountAPIKey {
+	id: string;
+	account_id: string;
+	name: string;
+	key_prefix: string;
+	created_by: string;
+	expires_at: string | null;
+	created_at: string;
+}
+
+export interface CreateAccountAPIKeyParams {
+	name: string;
+	expires_at?: string;
+}
+
+export interface CreateAccountAPIKeyResult {
+	key: string;
+	api_key: AccountAPIKey;
+}
