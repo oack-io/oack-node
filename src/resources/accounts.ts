@@ -87,9 +87,7 @@ export class Accounts {
 	}
 
 	async listAPIKeys(accountId: string): Promise<AccountAPIKey[]> {
-		return JSON.parse(
-			await this.client.request("GET", `/api/v1/accounts/${accountId}/api-keys`),
-		) as AccountAPIKey[];
+		return JSON.parse(await this.client.request("GET", `/api/v1/accounts/${accountId}/api-keys`)) as AccountAPIKey[];
 	}
 
 	async deleteAPIKey(accountId: string, keyId: string): Promise<void> {

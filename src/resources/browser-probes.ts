@@ -24,10 +24,7 @@ export class BrowserProbes {
 
 	async get(teamId: string, monitorId: string, probeId: string): Promise<BrowserProbe> {
 		return JSON.parse(
-			await this.client.request(
-				"GET",
-				`/api/v1/teams/${teamId}/monitors/${monitorId}/browser-probes/${probeId}`,
-			),
+			await this.client.request("GET", `/api/v1/teams/${teamId}/monitors/${monitorId}/browser-probes/${probeId}`),
 		) as BrowserProbe;
 	}
 
@@ -39,11 +36,9 @@ export class BrowserProbes {
 		const params: Record<string, string> = { from: options.from, to: options.to };
 		if (options.step) params.step = options.step;
 		return JSON.parse(
-			await this.client.request(
-				"GET",
-				`/api/v1/teams/${teamId}/monitors/${monitorId}/browser-probes/aggregate`,
-				{ params },
-			),
+			await this.client.request("GET", `/api/v1/teams/${teamId}/monitors/${monitorId}/browser-probes/aggregate`, {
+				params,
+			}),
 		) as BrowserProbeAggregation;
 	}
 

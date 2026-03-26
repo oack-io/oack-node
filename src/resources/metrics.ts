@@ -50,9 +50,7 @@ export class Metrics {
 		if (options.monitor_id) params.monitor_id = options.monitor_id;
 		if (options.kind) params.kind = options.kind;
 		if (options.source) params.source = options.source;
-		return JSON.parse(
-			await this.client.request("GET", `/api/v1/teams/${teamId}/events`, { params }),
-		) as ChartEvent[];
+		return JSON.parse(await this.client.request("GET", `/api/v1/teams/${teamId}/events`, { params })) as ChartEvent[];
 	}
 
 	async updateChartEvent(teamId: string, eventId: string, params: UpdateChartEventParams): Promise<ChartEvent> {
