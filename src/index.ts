@@ -4,6 +4,7 @@ import { AlertChannels } from "./resources/alert-channels.js";
 import { BrowserProbes } from "./resources/browser-probes.js";
 import { CFLogs } from "./resources/cf-logs.js";
 import { Comments } from "./resources/comments.js";
+import { EnvVars } from "./resources/env-vars.js";
 import { ExternalLinks } from "./resources/external-links.js";
 import { Geo } from "./resources/geo.js";
 import { Integrations } from "./resources/integrations.js";
@@ -14,6 +15,7 @@ import { Probes } from "./resources/probes.js";
 import { Shares } from "./resources/shares.js";
 import { StatusPages } from "./resources/status-pages.js";
 import { Teams } from "./resources/teams.js";
+import { TestScript } from "./resources/test-script.js";
 import { Traces } from "./resources/traces.js";
 import { UserResource } from "./resources/user.js";
 import { Watchdogs } from "./resources/watchdogs.js";
@@ -35,6 +37,8 @@ export class Oack {
 	readonly notifications: Notifications;
 	readonly shares: Shares;
 	readonly traces: Traces;
+	readonly envVars: EnvVars;
+	readonly testScript: TestScript;
 	readonly user: UserResource;
 	readonly cfLogs: CFLogs;
 
@@ -55,6 +59,8 @@ export class Oack {
 		this.integrations = new Integrations(client);
 		this.notifications = new Notifications(client);
 		this.shares = new Shares(client);
+		this.envVars = new EnvVars(client);
+		this.testScript = new TestScript(client);
 		this.traces = new Traces(client);
 		this.user = new UserResource(client);
 		this.cfLogs = new CFLogs(client);
@@ -190,3 +196,5 @@ export type {
 	UpdateNotificationPreferencesParams,
 } from "./types/user.js";
 export type { CFLogEntry } from "./types/cf-logs.js";
+export type { EnvVar, CreateEnvVarParams, UpdateEnvVarParams } from "./types/env-vars.js";
+export type { TestScriptParams, TestScriptResult, WebVitals } from "./types/test-script.js";

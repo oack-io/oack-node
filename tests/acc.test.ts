@@ -10,7 +10,7 @@
  *   OACK_API_KEY=... OACK_ACCOUNT_ID=... npx vitest run tests/acc.test.ts
  */
 
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Oack } from "../src/index.js";
 
 const API_KEY = process.env.OACK_API_KEY ?? "";
@@ -89,7 +89,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 		it("create", async () => {
 			const monitor = await client.monitors.create(teamId, {
 				name: monitorName,
-				url: "https://www.google.com", check_interval_ms: 30000,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
 			});
 			expect(monitor.id).toBeTruthy();
 			expect(monitor.name).toBe(monitorName);
@@ -110,7 +111,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 		it("update", async () => {
 			const updated = await client.monitors.update(teamId, monitorId, {
 				name: `${monitorName}-updated`,
-				url: "https://www.google.com", check_interval_ms: 30000,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
 			});
 			expect(updated.name).toBe(`${monitorName}-updated`);
 		});
@@ -209,7 +211,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 			teamId = team.id;
 			const monitor = await client.monitors.create(teamId, {
 				name: `ts-acc-metrics-mon-${unique}`,
-				url: "https://www.google.com", check_interval_ms: 30000,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
 			});
 			monitorId = monitor.id;
 		});
@@ -302,7 +305,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 			teamId = team.id;
 			const monitor = await client.monitors.create(teamId, {
 				name: `ts-acc-link-mon-${unique}`,
-				url: "https://www.google.com", check_interval_ms: 30000,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
 			});
 			monitorId = monitor.id;
 			const ch = await client.alertChannels.create(teamId, {
@@ -353,7 +357,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 			teamId = team.id;
 			const monitor = await client.monitors.create(teamId, {
 				name: `ts-acc-sp-mon-${unique}`,
-				url: "https://www.google.com", check_interval_ms: 30000,
+				url: "https://www.google.com",
+				check_interval_ms: 30000,
 			});
 			monitorId = monitor.id;
 		});
@@ -458,7 +463,9 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 			const maint = await client.statusPages.createMaintenance(ACCOUNT_ID, pageId, {
 				name: `ts-acc-maint-${unique}`,
 				message: "Test maintenance",
-				scheduled_start: "2099-01-01T00:00:00Z", scheduled_end: "2099-01-02T00:00:00Z", scheduled_duration_minutes: 60,
+				scheduled_start: "2099-01-01T00:00:00Z",
+				scheduled_end: "2099-01-02T00:00:00Z",
+				scheduled_duration_minutes: 60,
 			});
 			expect(maint.id).toBeTruthy();
 
@@ -470,7 +477,8 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 
 		it("incident template CRUD", async () => {
 			const tmpl = await client.statusPages.createIncidentTemplate(ACCOUNT_ID, pageId, {
-				title: `ts-acc-tmpl-${unique}`, name: `ts-acc-tmpl-${unique}`,
+				title: `ts-acc-tmpl-${unique}`,
+				name: `ts-acc-tmpl-${unique}`,
 				message: "Template body",
 				severity: "minor",
 			});
@@ -785,6 +793,53 @@ describe.skipIf(skip)("Acceptance Tests", () => {
 
 			await client.monitors.testAlert(teamId, monitor.id);
 			await client.monitors.delete(teamId, monitor.id);
+		});
+	});
+
+	// -------------------------------------------------------------------
+	// Env Vars
+	// -------------------------------------------------------------------
+	describe("EnvVars", () => {
+		let envTeamId: string;
+		const envTeamName = `ts-env-${unique}`;
+		const testKey = `TEST_KEY_${unique}`;
+
+		beforeAll(async () => {
+			const team = await client.teams.create(ACCOUNT_ID, envTeamName);
+			envTeamId = team.id;
+		});
+
+		afterAll(async () => {
+			if (envTeamId) await client.teams.delete(envTeamId);
+		});
+
+		it("create", async () => {
+			const ev = await client.envVars.create(envTeamId, {
+				key: testKey,
+				value: "test-value",
+				is_secret: false,
+			});
+			expect(ev.key).toBe(testKey);
+			expect(ev.value).toBe("test-value");
+			expect(ev.is_secret).toBe(false);
+		});
+
+		it("list", async () => {
+			const vars = await client.envVars.list(envTeamId);
+			expect(vars.some((v) => v.key === testKey)).toBe(true);
+		});
+
+		it("update", async () => {
+			const updated = await client.envVars.update(envTeamId, testKey, {
+				value: "updated-value",
+			});
+			expect(updated.value).toBe("updated-value");
+		});
+
+		it("delete", async () => {
+			await client.envVars.delete(envTeamId, testKey);
+			const remaining = await client.envVars.list(envTeamId);
+			expect(remaining.some((v) => v.key === testKey)).toBe(false);
 		});
 	});
 });
