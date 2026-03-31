@@ -1,13 +1,13 @@
 import type { BaseClient } from "../client.js";
 import type {
 	AccountIncident,
-	AccountIncidentWithDetails,
-	AccountIncidentUpdate,
 	AccountIncidentAnalytics,
+	AccountIncidentUpdate,
+	AccountIncidentWithDetails,
 	CreateAccountIncidentParams,
-	UpdateAccountIncidentParams,
-	PostAccountIncidentUpdateParams,
 	ListAccountIncidentsParams,
+	PostAccountIncidentUpdateParams,
+	UpdateAccountIncidentParams,
 } from "../types/incidents.js";
 
 export class AccountIncidents {
@@ -36,15 +36,11 @@ export class AccountIncidents {
 		if (params?.limit) query.set("limit", String(params.limit));
 		if (params?.offset) query.set("offset", String(params.offset));
 		const qs = query.toString();
-		const path = `/api/v1/accounts/${accountId}/incidents` + (qs ? `?${qs}` : "");
+		const path = `/api/v1/accounts/${accountId}/incidents${qs ? `?${qs}` : ""}`;
 		return JSON.parse(await this.client.request("GET", path)) as AccountIncident[];
 	}
 
-	async update(
-		accountId: string,
-		incidentId: string,
-		params: UpdateAccountIncidentParams,
-	): Promise<AccountIncident> {
+	async update(accountId: string, incidentId: string, params: UpdateAccountIncidentParams): Promise<AccountIncident> {
 		return JSON.parse(
 			await this.client.request("PUT", `/api/v1/accounts/${accountId}/incidents/${incidentId}`, {
 				json: params,
@@ -62,49 +58,34 @@ export class AccountIncidents {
 		params: PostAccountIncidentUpdateParams,
 	): Promise<AccountIncidentUpdate> {
 		return JSON.parse(
-			await this.client.request(
-				"POST",
-				`/api/v1/accounts/${accountId}/incidents/${incidentId}/updates`,
-				{ json: params },
-			),
+			await this.client.request("POST", `/api/v1/accounts/${accountId}/incidents/${incidentId}/updates`, {
+				json: params,
+			}),
 		) as AccountIncidentUpdate;
 	}
 
 	async acknowledge(accountId: string, incidentId: string): Promise<void> {
-		await this.client.request(
-			"POST",
-			`/api/v1/accounts/${accountId}/incidents/${incidentId}/acknowledge`,
-		);
+		await this.client.request("POST", `/api/v1/accounts/${accountId}/incidents/${incidentId}/acknowledge`);
 	}
 
 	async linkMonitors(accountId: string, incidentId: string, monitorIds: string[]): Promise<void> {
-		await this.client.request(
-			"POST",
-			`/api/v1/accounts/${accountId}/incidents/${incidentId}/monitors`,
-			{ json: { monitor_ids: monitorIds } },
-		);
+		await this.client.request("POST", `/api/v1/accounts/${accountId}/incidents/${incidentId}/monitors`, {
+			json: { monitor_ids: monitorIds },
+		});
 	}
 
 	async unlinkMonitor(accountId: string, incidentId: string, monitorId: string): Promise<void> {
-		await this.client.request(
-			"DELETE",
-			`/api/v1/accounts/${accountId}/incidents/${incidentId}/monitors/${monitorId}`,
-		);
+		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/incidents/${incidentId}/monitors/${monitorId}`);
 	}
 
 	async linkStatusPages(accountId: string, incidentId: string, statusPageIds: string[]): Promise<void> {
-		await this.client.request(
-			"POST",
-			`/api/v1/accounts/${accountId}/incidents/${incidentId}/status-pages`,
-			{ json: { status_page_ids: statusPageIds } },
-		);
+		await this.client.request("POST", `/api/v1/accounts/${accountId}/incidents/${incidentId}/status-pages`, {
+			json: { status_page_ids: statusPageIds },
+		});
 	}
 
 	async unlinkStatusPage(accountId: string, incidentId: string, pageId: string): Promise<void> {
-		await this.client.request(
-			"DELETE",
-			`/api/v1/accounts/${accountId}/incidents/${incidentId}/status-pages/${pageId}`,
-		);
+		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/incidents/${incidentId}/status-pages/${pageId}`);
 	}
 
 	async getAnalytics(
@@ -116,7 +97,7 @@ export class AccountIncidents {
 		if (options?.to) query.set("to", options.to);
 		if (options?.service_id) query.set("service_id", options.service_id);
 		const qs = query.toString();
-		const path = `/api/v1/accounts/${accountId}/incidents/analytics` + (qs ? `?${qs}` : "");
+		const path = `/api/v1/accounts/${accountId}/incidents/analytics${qs ? `?${qs}` : ""}`;
 		return JSON.parse(await this.client.request("GET", path)) as AccountIncidentAnalytics;
 	}
 }

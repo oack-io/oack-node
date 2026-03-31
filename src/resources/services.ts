@@ -1,5 +1,5 @@
 import type { BaseClient } from "../client.js";
-import type { Service, CreateServiceParams, UpdateServiceParams, ServiceAnalytics } from "../types/services.js";
+import type { CreateServiceParams, Service, ServiceAnalytics, UpdateServiceParams } from "../types/services.js";
 
 export class Services {
 	constructor(private client: BaseClient) {}
@@ -11,9 +11,7 @@ export class Services {
 	}
 
 	async list(accountId: string): Promise<Service[]> {
-		return JSON.parse(
-			await this.client.request("GET", `/api/v1/accounts/${accountId}/services`),
-		) as Service[];
+		return JSON.parse(await this.client.request("GET", `/api/v1/accounts/${accountId}/services`)) as Service[];
 	}
 
 	async get(accountId: string, serviceId: string): Promise<Service> {
@@ -39,10 +37,7 @@ export class Services {
 	}
 
 	async unlinkMonitor(accountId: string, serviceId: string, monitorId: string): Promise<void> {
-		await this.client.request(
-			"DELETE",
-			`/api/v1/accounts/${accountId}/services/${serviceId}/monitors/${monitorId}`,
-		);
+		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/services/${serviceId}/monitors/${monitorId}`);
 	}
 
 	async linkIncidents(accountId: string, serviceId: string, incidentIds: string[]): Promise<void> {
@@ -52,10 +47,7 @@ export class Services {
 	}
 
 	async unlinkIncident(accountId: string, serviceId: string, incidentId: string): Promise<void> {
-		await this.client.request(
-			"DELETE",
-			`/api/v1/accounts/${accountId}/services/${serviceId}/incidents/${incidentId}`,
-		);
+		await this.client.request("DELETE", `/api/v1/accounts/${accountId}/services/${serviceId}/incidents/${incidentId}`);
 	}
 
 	async getAnalytics(accountId: string, serviceId: string): Promise<ServiceAnalytics> {

@@ -1,5 +1,5 @@
 import type { BaseClient } from "../client.js";
-import type { CreateTriggerParams, UpdateTriggerParams, Trigger } from "../types/status-pages.js";
+import type { CreateTriggerParams, Trigger, UpdateTriggerParams } from "../types/status-pages.js";
 
 export class Triggers {
 	constructor(private client: BaseClient) {}

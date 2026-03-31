@@ -5,26 +5,26 @@ import { BrowserProbes } from "./resources/browser-probes.js";
 import { CFLogs } from "./resources/cf-logs.js";
 import { Comments } from "./resources/comments.js";
 import { EnvVars } from "./resources/env-vars.js";
+import { EscalationPolicies } from "./resources/escalation-policies.js";
 import { ExternalLinks } from "./resources/external-links.js";
 import { Geo } from "./resources/geo.js";
+import { AccountIncidents } from "./resources/incidents.js";
 import { Integrations } from "./resources/integrations.js";
 import { Metrics } from "./resources/metrics.js";
 import { Monitors } from "./resources/monitors.js";
 import { Notifications } from "./resources/notifications.js";
+import { OnCall } from "./resources/oncall.js";
+import { Postmortems } from "./resources/postmortems.js";
 import { Probes } from "./resources/probes.js";
+import { Services } from "./resources/services.js";
 import { Shares } from "./resources/shares.js";
 import { StatusPages } from "./resources/status-pages.js";
 import { Teams } from "./resources/teams.js";
 import { TestScript } from "./resources/test-script.js";
 import { Traces } from "./resources/traces.js";
-import { UserResource } from "./resources/user.js";
 import { Triggers } from "./resources/triggers.js";
+import { UserResource } from "./resources/user.js";
 import { Watchdogs } from "./resources/watchdogs.js"; // deprecated
-import { Services } from "./resources/services.js";
-import { AccountIncidents } from "./resources/incidents.js";
-import { OnCall } from "./resources/oncall.js";
-import { EscalationPolicies } from "./resources/escalation-policies.js";
-import { Postmortems } from "./resources/postmortems.js";
 
 export class Oack {
 	readonly accounts: Accounts;
