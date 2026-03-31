@@ -250,7 +250,7 @@ export interface UpdateIncidentTemplateParams {
 	notify_subscribers?: boolean;
 }
 
-export interface Watchdog {
+export interface Trigger {
 	id: string;
 	component_id: string;
 	monitor_id: string;
@@ -263,7 +263,7 @@ export interface Watchdog {
 	created_at: string;
 }
 
-export interface CreateWatchdogParams {
+export interface CreateTriggerParams {
 	monitor_id: string;
 	severity: string;
 	auto_create?: boolean;
@@ -272,10 +272,17 @@ export interface CreateWatchdogParams {
 	template_id?: string;
 }
 
-export interface UpdateWatchdogParams {
+export interface UpdateTriggerParams {
 	severity?: string;
 	auto_create?: boolean;
 	auto_resolve?: boolean;
 	notify_subscribers?: boolean;
 	template_id?: string;
 }
+
+/** @deprecated Use Trigger instead */
+export type Watchdog = Trigger;
+/** @deprecated Use CreateTriggerParams instead */
+export type CreateWatchdogParams = CreateTriggerParams;
+/** @deprecated Use UpdateTriggerParams instead */
+export type UpdateWatchdogParams = UpdateTriggerParams;

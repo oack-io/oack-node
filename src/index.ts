@@ -18,7 +18,8 @@ import { Teams } from "./resources/teams.js";
 import { TestScript } from "./resources/test-script.js";
 import { Traces } from "./resources/traces.js";
 import { UserResource } from "./resources/user.js";
-import { Watchdogs } from "./resources/watchdogs.js";
+import { Triggers } from "./resources/triggers.js";
+import { Watchdogs } from "./resources/watchdogs.js"; // deprecated
 
 export class Oack {
 	readonly accounts: Accounts;
@@ -30,6 +31,8 @@ export class Oack {
 	readonly metrics: Metrics;
 	readonly geo: Geo;
 	readonly statusPages: StatusPages;
+	readonly triggers: Triggers;
+	/** @deprecated Use triggers instead */
 	readonly watchdogs: Watchdogs;
 	readonly comments: Comments;
 	readonly externalLinks: ExternalLinks;
@@ -53,7 +56,8 @@ export class Oack {
 		this.metrics = new Metrics(client);
 		this.geo = new Geo(client);
 		this.statusPages = new StatusPages(client);
-		this.watchdogs = new Watchdogs(client);
+		this.triggers = new Triggers(client);
+		this.watchdogs = new Watchdogs(client); // deprecated
 		this.comments = new Comments(client);
 		this.externalLinks = new ExternalLinks(client);
 		this.integrations = new Integrations(client);
@@ -162,6 +166,9 @@ export type {
 	IncidentTemplate,
 	CreateIncidentTemplateParams,
 	UpdateIncidentTemplateParams,
+	Trigger,
+	CreateTriggerParams,
+	UpdateTriggerParams,
 	Watchdog,
 	CreateWatchdogParams,
 	UpdateWatchdogParams,
