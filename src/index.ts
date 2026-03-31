@@ -20,6 +20,11 @@ import { Traces } from "./resources/traces.js";
 import { UserResource } from "./resources/user.js";
 import { Triggers } from "./resources/triggers.js";
 import { Watchdogs } from "./resources/watchdogs.js"; // deprecated
+import { Services } from "./resources/services.js";
+import { AccountIncidents } from "./resources/incidents.js";
+import { OnCall } from "./resources/oncall.js";
+import { EscalationPolicies } from "./resources/escalation-policies.js";
+import { Postmortems } from "./resources/postmortems.js";
 
 export class Oack {
 	readonly accounts: Accounts;
@@ -44,6 +49,11 @@ export class Oack {
 	readonly testScript: TestScript;
 	readonly user: UserResource;
 	readonly cfLogs: CFLogs;
+	readonly services: Services;
+	readonly incidents: AccountIncidents;
+	readonly onCall: OnCall;
+	readonly escalationPolicies: EscalationPolicies;
+	readonly postmortems: Postmortems;
 
 	constructor(options: OackOptions) {
 		const client = new BaseClient(options);
@@ -68,6 +78,11 @@ export class Oack {
 		this.traces = new Traces(client);
 		this.user = new UserResource(client);
 		this.cfLogs = new CFLogs(client);
+		this.services = new Services(client);
+		this.incidents = new AccountIncidents(client);
+		this.onCall = new OnCall(client);
+		this.escalationPolicies = new EscalationPolicies(client);
+		this.postmortems = new Postmortems(client);
 	}
 }
 
@@ -205,3 +220,46 @@ export type {
 export type { CFLogEntry } from "./types/cf-logs.js";
 export type { EnvVar, CreateEnvVarParams, UpdateEnvVarParams } from "./types/env-vars.js";
 export type { TestScriptParams, TestScriptResult, WebVitals } from "./types/test-script.js";
+export type {
+	Service,
+	CreateServiceParams,
+	UpdateServiceParams,
+	ServiceAnalytics,
+} from "./types/services.js";
+export type {
+	AccountIncident,
+	AccountIncidentUpdate,
+	EscalationState,
+	EscalationEvent,
+	AccountIncidentWithDetails,
+	CreateAccountIncidentParams,
+	UpdateAccountIncidentParams,
+	PostAccountIncidentUpdateParams,
+	ListAccountIncidentsParams,
+	AccountIncidentAnalytics,
+} from "./types/incidents.js";
+export type {
+	OnCallSchedule,
+	OnCallOverride,
+	WhosOnCall,
+	CreateScheduleParams,
+	UpdateScheduleParams,
+	CreateOverrideParams,
+} from "./types/oncall.js";
+export type {
+	EscalationPolicy,
+	EscalationLevel,
+	CreateEscalationPolicyParams,
+	UpdateEscalationPolicyParams,
+} from "./types/escalation-policies.js";
+export type {
+	Postmortem,
+	PostmortemAction,
+	PostmortemTemplate,
+	CreatePostmortemParams,
+	UpdatePostmortemParams,
+	CreateActionItemParams,
+	UpdateActionItemParams,
+	CreatePostmortemTemplateParams,
+	UpdatePostmortemTemplateParams,
+} from "./types/postmortems.js";
