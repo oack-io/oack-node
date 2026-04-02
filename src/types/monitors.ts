@@ -56,6 +56,21 @@ export interface BrowserConfig {
 	steps?: BrowserStep[];
 	script?: string;
 	script_env?: ScriptEnvVar[];
+	suite_url?: string;
+	deps_url?: string;
+	deps_hash?: string;
+	pw_project?: string;
+	pw_grep?: string;
+	pw_tag?: string;
+	suite_git_sha?: string;
+	suite_git_branch?: string;
+	suite_git_origin?: string;
+	suite_deploy_host?: string;
+	suite_uploaded_at?: string;
+	suite_deployed_by_id?: string;
+	suite_deployed_by?: string;
+	suite_deployed_by_img?: string;
+	suite_deploy_cmd?: string;
 }
 
 export interface BrowserStep {
